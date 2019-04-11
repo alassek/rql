@@ -1,8 +1,18 @@
+require_relative "predications"
+
 module RQL
   module Nodes
-    Unary  = Struct.new(:expr)
-    Binary = Struct.new(:left, :right)
-    Nary   = Class.new(Array)
+    class Unary < Struct.new(:expr)
+      include Predications
+    end
+
+    class Binary < Struct.new(:left, :right)
+      include Predications
+    end
+
+    class Nary < Array
+      include Predications
+    end
 
     Grouping   = Class.new(Unary)
     And        = Class.new(Binary)
