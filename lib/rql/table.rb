@@ -1,9 +1,15 @@
 require "rql/attribute"
 
 module RQL
-  class Table < Struct.new(:name)
+  class Table
+    attr_reader :name
+
+    def initialize(name)
+      @name = name
+    end
+
     def [](attribute)
-      Attribute.new(self, attribute)
+      Attribute.new(name, attribute)
     end
 
     def where(expr)
@@ -11,16 +17,7 @@ module RQL
     end
 
     def project(*exprs)
-      Select.new(self).project(
-        exprs.map { |e|
-          case e
-          when String, Symbol
-            self[e]
-          else
-            e
-          end
-        }
-      )
+      Select.new(self).project(*exprs)
     end
   end
 end

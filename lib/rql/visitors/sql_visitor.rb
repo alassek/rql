@@ -10,7 +10,7 @@ module RQL
       private
 
       def visit_RQL_Attribute(object, collector)
-        collector << quoted(object.relation.name)
+        collector << quoted(object.relation)
         collector << "."
         collector <<
           case object.name

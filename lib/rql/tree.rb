@@ -8,6 +8,10 @@ module RQL
       @wheres      = Nodes::Where.new
     end
 
+    def accept(visitor)
+      visitor.visit(self)
+    end
+
     def initialize_copy(**options)
       new_table = options.fetch(:from, table)
 
@@ -21,8 +25,17 @@ module RQL
       initialize_copy(from: table)
     end
 
-    def project(expr)
-      initialize_copy projections: @projections.concat(Array(expr))
+    def project(*exprs)
+      initialize_copy projections: @projections.concat(
+        Array(exprs).map { |e|
+          case e
+          when String, Symbol
+            table[e]
+          else
+            e
+          end
+        }
+      )
     end
 
     def where(expr)
